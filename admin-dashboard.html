@@ -1,0 +1,145 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .dashboard {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff4f81;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #ff4f81;
+            color: white;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .failed {
+            color: red;
+            font-weight: bold;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            background: #ff4f81;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <h1>🔐 Admin Dashboard</h1>
+
+        <button onclick="loadHistory()">
+            Refresh Login History
+        </button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Login Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="historyBody">
+                <tr>
+                    <td colspan="4">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+        async function loadHistory() {
+
+            const response = await fetch("/api/login-history");
+
+            const history = await response.json();
+
+            const tableBody =
+                document.getElementById("historyBody");
+
+            tableBody.innerHTML = "";
+
+            if (history.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4">
+                            No login history yet
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            history.forEach(item => {
+
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.username}</td>
+                    <td>${item.login_time}</td>
+                    <td class="${item.status}">
+                        ${item.status}
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        loadHistory();
+    </script>
+
+</body>
+</html>
+```
