@@ -152,4 +152,6 @@ app.listen(PORT, () => {
         `Server running on http://localhost:${PORT}`
     );
 
-});
+});const frontendPath = path.join("C:", "Users", "acer", "Downloads", "maha anniver");
+
+app.use(express.static(frontendPath));
